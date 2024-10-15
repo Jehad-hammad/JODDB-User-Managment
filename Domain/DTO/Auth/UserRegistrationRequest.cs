@@ -9,5 +9,6 @@ namespace Domain.DTO
         public string MobileNumber { get; set; }
         public string Password { get; set; }
         public IFormFile? file { get; set; }
+        public string? filePath { get; set; }
     }
 }

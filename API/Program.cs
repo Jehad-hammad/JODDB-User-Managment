@@ -66,9 +66,9 @@ builder.Services.AddSwaggerGen(c =>
                      }
                  });
 
-   /* var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);*/
+    c.IncludeXmlComments(xmlPath);
 });
 
 #region Identity
@@ -96,10 +96,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseStaticFiles(); 
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    context.Request.Headers.Add("Keep-Alive", "timeout=600"); 
+    await next.Invoke();
+});
 
 app.MapControllers();
 

@@ -32,10 +32,10 @@ namespace Services.Services
 
         public async Task<BaseListResponse<UserProfileResponse>> GetUserList(BaseSearch baseSearch)
         {
-            var users = await _userManager.Users.AsNoTracking().Where(x => (string.IsNullOrEmpty(baseSearch.Name) ||
-                                                                      x.FullName.Contains(baseSearch.Name)  ||
-                                                                      x.Email.Contains(baseSearch.Name)))
-                                                                  .Skip(baseSearch.PageSize * baseSearch.PageNumber)
+            var users = await _userManager.Users.AsNoTracking().Where(x => (string.IsNullOrEmpty(baseSearch.Name) || x.FullName.Contains(baseSearch.Name.Trim()))&&
+                                                                           (string.IsNullOrEmpty(baseSearch.Email) || x.Email.Contains(baseSearch.Email.Trim())) && 
+                                                                           (string.IsNullOrEmpty(baseSearch.MobileNumber) || x.PhoneNumber.Contains(baseSearch.MobileNumber.Trim())))
+                                                                  .Skip(baseSearch.PageSize * (baseSearch.PageNumber - 1))
                                                                   .Take(baseSearch.PageSize)
                                                                   .Select(x => new UserProfileResponse
                                                                   {
@@ -45,7 +45,9 @@ namespace Services.Services
                                                                       ImagePath = x.ImagePath
                                                                   }).ToListAsync();
 
-            int totalCount = _userManager.Users.Count();
+            int totalCount = _userManager.Users.Where(x => (string.IsNullOrEmpty(baseSearch.Name) || x.FullName.Contains(baseSearch.Name.Trim())) &&
+                                                                           (string.IsNullOrEmpty(baseSearch.Email) || x.Email.Contains(baseSearch.Email.Trim())) &&
+                                                                           (string.IsNullOrEmpty(baseSearch.MobileNumber) || x.PhoneNumber.Contains(baseSearch.MobileNumber.Trim()))).Count();
 
            
 

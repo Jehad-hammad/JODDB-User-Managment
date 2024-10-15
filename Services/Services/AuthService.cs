@@ -58,6 +58,7 @@ namespace Services.Services
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 UserName = request.Email,
+                ImagePath = request.filePath,
             };
 
             IdentityResult result = await _userManager.CreateAsync(applicationUser, request.Password);
